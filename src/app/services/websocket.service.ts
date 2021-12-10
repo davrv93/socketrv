@@ -1,13 +1,14 @@
 import { Injectable } from "@angular/core";
-import { Observable, Observer, Subject } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
+import { AnonymousSubject } from 'rxjs/internal/Subject';
 
 @Injectable()
 export class WebsocketService {
     constructor() { }
 
-    private subject: Subject<MessageEvent>;
+    private subject: AnonymousSubject<MessageEvent>;
 
-    public connect(url): Subject<MessageEvent> {
+    public connect(url): AnonymousSubject<MessageEvent> {
         if (!this.subject) {
             this.subject = this.create(url);
             console.log("Successfully connected: " + url);
@@ -15,7 +16,7 @@ export class WebsocketService {
         return this.subject;
     }
 
-    private create(url): Subject<MessageEvent> {
+    private create(url): AnonymousSubject<MessageEvent> {
         let ws = new WebSocket(url);
 
         let observable = new Observable((obs: Observer<MessageEvent>) => {
@@ -25,6 +26,8 @@ export class WebsocketService {
             return ws.close.bind(ws);
         });
         let observer = {
+            error: null,
+            complete: null,
             next: (data: Object) => {
                 console.log('Message sent to websocket: ', data);
                 if (ws.readyState === WebSocket.OPEN) {
@@ -32,6 +35,6 @@ export class WebsocketService {
                 }
             }
         };
-        return Subject.create(observer, observable);
+        return new AnonymousSubject<MessageEvent>(observer, observable);
     }
 }
