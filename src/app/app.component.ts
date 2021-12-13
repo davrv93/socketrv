@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { WebsocketService } from "./services/websocket.service";
-import { ChatService } from "./services/chat.service";
+import { SocketService } from "./services/socket.service";
 
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"],
-  providers: [WebsocketService, ChatService]
+  providers: [WebsocketService, SocketService]
 })
 
 export class AppComponent {
@@ -15,8 +15,8 @@ export class AppComponent {
   received = [];
   sent = [];
 
-  constructor(private chatService: ChatService) {
-    chatService.messages.subscribe(msg => {
+  constructor(private SocketService: SocketService) {
+    SocketService.messages.subscribe(msg => {
       this.received.push(msg);
       console.log("Response from websocket: " + msg);
     });
@@ -32,6 +32,6 @@ export class AppComponent {
     message.content = this.content;
 
     this.sent.push(message);
-    this.chatService.messages.next(message);
+    this.SocketService.messages.next(message);
   }
 }

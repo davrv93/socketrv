@@ -11,7 +11,7 @@ export interface Message {
 }
 
 @Injectable()
-export class ChatService {
+export class SocketService {
     public messages: Subject<Message>;
 
     constructor(wsService: WebsocketService) {
