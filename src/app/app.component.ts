@@ -6,7 +6,7 @@ import { SocketService } from "./services/socket.service";
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.css"],
-  providers: [WebsocketService, SocketService]
+  providers: [WebsocketService]
 })
 
 export class AppComponent {
@@ -15,8 +15,8 @@ export class AppComponent {
   received = [];
   sent = [];
 
-  constructor(private SocketService: SocketService) {
-    SocketService.messages.subscribe(msg => {
+  constructor(private WebsocketService: WebsocketService) {
+    WebsocketService.messages.subscribe(msg => {
       this.received.push(msg);
       console.log("Response from websocket: " + msg);
     });
@@ -32,6 +32,6 @@ export class AppComponent {
     message.content = this.content;
 
     this.sent.push(message);
-    this.SocketService.messages.next(message);
+    this.WebsocketService.messages.next(message);
   }
 }

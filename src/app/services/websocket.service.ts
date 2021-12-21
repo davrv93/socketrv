@@ -1,10 +1,32 @@
 import { Injectable } from "@angular/core";
 import { Observable, Observer } from 'rxjs';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const CHAT_URL = "ws://localhost:5000";
+
+export interface Message {
+    source: string;
+    content: string;
+}
 
 @Injectable()
 export class WebsocketService {
-    constructor() { }
+    public messages: Subject<Message>;
+
+    constructor() {
+        this.messages = <Subject<Message>>this.connect(CHAT_URL).pipe(
+            map(
+                (response: MessageEvent): Message => {
+                    console.log(response.data);
+                    let data = JSON.parse(response.data)
+                    return data;
+                }
+            )
+        );
+
+    }
 
     private subject: AnonymousSubject<MessageEvent>;
 
