@@ -13,6 +13,7 @@ export interface Message {
 
 @Injectable()
 export class WebsocketService {
+    private subject: AnonymousSubject<MessageEvent>;
     public messages: Subject<Message>;
 
     constructor() {
@@ -28,7 +29,6 @@ export class WebsocketService {
 
     }
 
-    private subject: AnonymousSubject<MessageEvent>;
 
     public connect(url): AnonymousSubject<MessageEvent> {
         if (!this.subject) {
